@@ -1,0 +1,5 @@
+language: objective-c
+osx_image: xcode9
+before_script: ./pkg u
+script: xcodebuild test -scheme apollo-fetcher-Package -enableCodeCoverage YES
+after_success:

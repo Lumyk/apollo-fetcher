@@ -1,0 +1,22 @@
+query cars($limit: Int!) {
+    userInfo : getUserProfile {
+        id
+        username
+        email
+        company {
+            name
+        }
+    }
+    cars: getCars {
+        id
+        registration_number
+        name
+    }
+    getFields(limit: $limit) {
+        name
+        id
+        field_group {
+            name
+        }
+    }
+}
