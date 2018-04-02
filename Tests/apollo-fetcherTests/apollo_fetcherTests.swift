@@ -1,8 +1,12 @@
 import XCTest
 import Apollo
 import apollo_mapper
+import SQLite
+import sqlite_helper
 
 @testable import apollo_fetcher
+@testable import apollo_fetcher_storable
+
 
 class apollo_fetcherTests: XCTestCase {
     
@@ -32,7 +36,12 @@ class apollo_fetcherTests: XCTestCase {
         }
     }
     
-    class FetchableTestClass: Fetchable {
+    class FetchableTestClass: Fetchable, StorableFetch {
+        
+        static func storageTypes() -> [Storable.Type] {
+            return [StorableClass.self]
+        }
+        
         static func defaultQuery() -> CarsQuery {
             return CarsQuery(limit: 10)
         }
@@ -42,7 +51,12 @@ class apollo_fetcherTests: XCTestCase {
         }
     }
     
-    class FetchableTestClassBroken: Fetchable {
+    class FetchableTestClassBroken: Fetchable, StorableFetch {
+        
+        static func storageTypes() -> [Storable.Type] {
+            return []
+        }
+        
         static func defaultQuery() -> CarsQuery {
             return CarsQuery(limit: 10)
         }
@@ -99,7 +113,7 @@ class apollo_fetcherTests: XCTestCase {
             switch error {
                 case .another(error: let error):
                     XCTAssert(error.localizedDescription == QueryErrorTest.testError3.localizedDescription, "testPerformableResultHandler error 1")
-            case .unnown:
+            default:
                 XCTFail()
             }
         }
@@ -109,11 +123,10 @@ class apollo_fetcherTests: XCTestCase {
         let result1 = QueryResult<PerformableTestClass>()
         result1.bindFailure { (error) in
             switch error {
-            case .another(error: let error):
-                XCTFail("testPerformableResultHandler error 2 \(error)")
             case .unnown:
                 XCTAssert(true)
-
+            default:
+                XCTFail("testPerformableResultHandler error 2 \(error)")
             }
         }
         PerformableTestClass.resultHandler(result: result1, error: nil, data: data, errors: nil)
@@ -147,7 +160,7 @@ class apollo_fetcherTests: XCTestCase {
             switch error {
             case .another(error: let error):
                 XCTAssert(error.localizedDescription == QueryErrorTest.testError3.localizedDescription, "testFetchableResultHandler error 1")
-            case .unnown:
+           default:
                 XCTFail()
             }
         }
@@ -157,11 +170,10 @@ class apollo_fetcherTests: XCTestCase {
         let result1 = QueryResult<FetchableTestClass>()
         result1.bindFailure { (error) in
             switch error {
-            case .another(error: let error):
-                XCTFail("testPerformableResultHandler error 2 \(error)")
             case .unnown:
                 XCTAssert(true)
-                
+            default:
+                XCTFail("testPerformableResultHandler error 2")
             }
         }
         FetchableTestClass.resultHandler(result: result1, error: nil, snapshot: nil, errors: nil, storage: nil)
@@ -231,6 +243,97 @@ class apollo_fetcherTests: XCTestCase {
         }
         semaphore.wait()
     }
+    
+    class TestContext: SavebleContext {
+        
+        var apollo: ApolloClient
+        var connection: Connection
+        
+        required init(apollo: ApolloClient, connection: Connection) throws {
+            self.apollo = apollo
+            self.connection = connection
+        }
+    }
+    
+    class StorableClass: Storable {
+        
+        required init(row: Row) throws {
+            
+        }
+        
+        static func tableBuilder(tableBuilder: TableBuilder) {
+            
+        }
+        
+        func insertMapper() -> [Setter] {
+            return []
+        }
+        
+        static func insertMapper(mapper: Mapper) throws -> [Setter] {
+            return []
+        }
+        
+        
+    }
+    
+    func testSavebleFatch() {
+        let apollo = ApolloClient(url: URL(string: "http://localhost")!)
+        let connection = try! Connection(Connection.Location.inMemory, readonly: false)
+        let context = try! TestContext(apollo: apollo, connection: connection)
+        
+        let semaphore = DispatchSemaphore(value: 0)
+        let result = FetchableTestClass.fetch(context: context)
+        result.bindFailure { (_) in
+            XCTAssert(true)
+            semaphore.signal()
+        }
+        result.bindSuccess { (_) in
+            XCTFail("testSavebleFatch error 1")
+            semaphore.signal()
+        }
+        semaphore.wait()
+        
+        let result2 = FetchableTestClass.fetch(context: context, query: CarsQuery(limit: 10))
+        result2.bindFailure { (_) in
+            XCTAssert(true)
+            semaphore.signal()
+        }
+        result2.bindSuccess { (_) in
+            XCTFail("testSavebleFatch error 2")
+            semaphore.signal()
+        }
+        semaphore.wait()
+    }
+    
+    func testSavebleFatchAndSave() {
+        let apollo = ApolloClient(url: URL(string: "http://localhost")!)
+        let connection = try! Connection(Connection.Location.inMemory, readonly: false)
+        let context = try! TestContext(apollo: apollo, connection: connection)
+        
+        let semaphore = DispatchSemaphore(value: 0)
+        
+        let result = try! FetchableTestClass.fetchAndSave(context: context)
+        result.bindFailure { (_) in
+            XCTAssert(true)
+            semaphore.signal()
+        }
+        result.bindSuccess { (_) in
+            XCTFail("testSavebleFatch error 1")
+            semaphore.signal()
+        }
+        semaphore.wait()
+        
+        let result2 = try! FetchableTestClass.fetchAndSave(context: context, query: CarsQuery(limit: 10))
+        result2.bindFailure { (_) in
+            XCTAssert(true)
+            semaphore.signal()
+        }
+        result2.bindSuccess { (_) in
+            XCTFail("testSavebleFatch error 2")
+            semaphore.signal()
+        }
+        semaphore.wait()
+    }
 
     static var allTests = [
         ("testQueryResult", testQueryResult),
@@ -239,5 +342,6 @@ class apollo_fetcherTests: XCTestCase {
         ("testFetchableResultHandler", testFetchableResultHandler),
         ("testPerformablePerform", testPerformablePerform),
         ("testFetchableFetch", testFetchableFetch),
+        ("testSavebleFatch", testSavebleFatch),
     ]
 }

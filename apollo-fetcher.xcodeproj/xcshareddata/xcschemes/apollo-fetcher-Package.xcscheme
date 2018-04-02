@@ -14,6 +14,48 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "apollo-fetcher::apollo-fetcher-storable"
+               BuildableName = "apollo_fetcher_storable.framework"
+               BlueprintName = "apollo-fetcher-storable"
+               ReferencedContainer = "container:apollo-fetcher.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "sqlite-helper::sqlite-helper"
+               BuildableName = "sqlite_helper.framework"
+               BlueprintName = "sqlite-helper"
+               ReferencedContainer = "container:apollo-fetcher.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "SQLite.swift::SQLite"
+               BuildableName = "SQLite.framework"
+               BlueprintName = "SQLite"
+               ReferencedContainer = "container:apollo-fetcher.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "apollo-fetcher::apollo-fetcher"
                BuildableName = "apollo_fetcher.framework"
                BlueprintName = "apollo-fetcher"
@@ -55,7 +97,8 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       language = ""
-      shouldUseLaunchSchemeArgsEnv = "YES">
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      codeCoverageEnabled = "YES">
       <Testables>
          <TestableReference
             skipped = "NO">
@@ -85,9 +128,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "apollo-fetcher::apollo-fetcher"
-            BuildableName = "apollo_fetcher.framework"
-            BlueprintName = "apollo-fetcher"
+            BlueprintIdentifier = "apollo-fetcher::apollo-fetcher-storable"
+            BuildableName = "apollo_fetcher_storable.framework"
+            BlueprintName = "apollo-fetcher-storable"
             ReferencedContainer = "container:apollo-fetcher.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

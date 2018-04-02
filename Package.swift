@@ -10,11 +10,15 @@ let package = Package(
         .library(
             name: "apollo-fetcher",
             targets: ["apollo-fetcher"]),
+        .library(
+            name: "apollo-fetcher-storable",
+            targets: ["apollo-fetcher-storable"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         .package(url: "https://github.com/lumyk/apollo-mapper.git", from: "0.0.4"),
         .package(url: "https://github.com/apollographql/apollo-ios.git", from: "0.8.0"),
+        .package(url: "https://github.com/Lumyk/sqlite-helper.git", from: "0.0.1"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -22,8 +26,11 @@ let package = Package(
         .target(
             name: "apollo-fetcher",
             dependencies: ["Apollo", "apollo-mapper"]),
+        .target(
+            name: "apollo-fetcher-storable",
+            dependencies: ["apollo-fetcher","sqlite-helper"], path: "Sources/apollo-fetcher-storable/"),
         .testTarget(
             name: "apollo-fetcherTests",
-            dependencies: ["apollo-fetcher", "Apollo", "apollo-mapper"]),
+            dependencies: ["apollo-fetcher-storable"]),
     ]
 )
