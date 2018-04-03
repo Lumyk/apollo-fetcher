@@ -249,7 +249,7 @@ class apollo_fetcherTests: XCTestCase {
         var apollo: ApolloClient
         var connection: Connection
         
-        required init(apollo: ApolloClient, connection: Connection) throws {
+        required init(apollo: ApolloClient, connection: Connection) {
             self.apollo = apollo
             self.connection = connection
         }
@@ -279,7 +279,7 @@ class apollo_fetcherTests: XCTestCase {
     func testSavebleFatch() {
         let apollo = ApolloClient(url: URL(string: "http://localhost")!)
         let connection = try! Connection(Connection.Location.inMemory, readonly: false)
-        let context = try! TestContext(apollo: apollo, connection: connection)
+        let context = TestContext(apollo: apollo, connection: connection)
         
         let semaphore = DispatchSemaphore(value: 0)
         let result = FetchableTestClass.fetch(context: context)
@@ -308,11 +308,11 @@ class apollo_fetcherTests: XCTestCase {
     func testSavebleFatchAndSave() {
         let apollo = ApolloClient(url: URL(string: "http://localhost")!)
         let connection = try! Connection(Connection.Location.inMemory, readonly: false)
-        let context = try! TestContext(apollo: apollo, connection: connection)
+        let context = TestContext(apollo: apollo, connection: connection)
         
         let semaphore = DispatchSemaphore(value: 0)
         
-        let result = try! FetchableTestClass.fetchAndSave(context: context)
+        let result = FetchableTestClass.fetchAndSave(context: context)
         result.bindFailure { (_) in
             XCTAssert(true)
             semaphore.signal()
@@ -323,7 +323,7 @@ class apollo_fetcherTests: XCTestCase {
         }
         semaphore.wait()
         
-        let result2 = try! FetchableTestClass.fetchAndSave(context: context, query: CarsQuery(limit: 10))
+        let result2 = FetchableTestClass.fetchAndSave(context: context, query: CarsQuery(limit: 10))
         result2.bindFailure { (_) in
             XCTAssert(true)
             semaphore.signal()

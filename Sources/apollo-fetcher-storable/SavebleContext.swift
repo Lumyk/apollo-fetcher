@@ -16,7 +16,7 @@ import sqlite_helper
 public protocol SavebleContext {
     var apollo: ApolloClient { get }
     var connection: Connection { get }
-    init(apollo: ApolloClient, connection: Connection) throws
+    init(apollo: ApolloClient, connection: Connection)
 }
 
 public protocol StorableFetch {
@@ -33,13 +33,13 @@ public extension StorableFetch where Self: Fetchable {
         return self.fetch(apollo: context.apollo, query: query, storage: nil)
     }
     
-    public static func fetchAndSave(context: SavebleContext) throws -> QueryResult<Self> {
+    public static func fetchAndSave(context: SavebleContext) -> QueryResult<Self> {
         let types = Self.storageTypes()
         let storage = Storege(connection: context.connection, types: types)
         return self.fetch(apollo: context.apollo, storage: storage)
     }
     
-    public static func fetchAndSave<T: GraphQLQuery>(context: SavebleContext, query: T) throws -> QueryResult<Self> {
+    public static func fetchAndSave<T: GraphQLQuery>(context: SavebleContext, query: T) -> QueryResult<Self> {
         let types = Self.storageTypes()
         let storage = Storege(connection: context.connection, types: types)
         return self.fetch(apollo: context.apollo, query: query, storage: storage)
