@@ -12,7 +12,7 @@ public protocol Querible {
     static func errorsDecoder(_ errors: [GraphQLError]) -> QueryError
 }
 
-extension Querible {
+public extension Querible {
     static func errorDecoder(_ error: Error) -> QueryError {
         return QueryError.another(error: error)
     }
