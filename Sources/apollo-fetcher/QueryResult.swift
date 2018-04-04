@@ -9,22 +9,18 @@ import Apollo
 
 public class QueryResult<T> {
     var cancellable: Cancellable?
-    private(set) var success: ((T) -> Void)?
-    private(set) var failure: ((QueryError) -> Void)?
+    private(set) var success = [((T) -> Void)]()
+    private(set) var failure = [((QueryError) -> Void)]()
     
     private var data: T? {
         didSet {
-            if let data = self.data {
-                self.success?(data)
-            }
+            self.notifySuccess(data: self.data)
         }
     }
     
     private var error: QueryError? {
         didSet {
-            if let error = self.error {
-                self.failure?(error)
-            }
+            self.notifyFailure(error: self.error)
         }
     }
     
@@ -44,18 +40,30 @@ public class QueryResult<T> {
         self.error = error
     }
     
-    public func bindSuccess(_ result: @escaping (_ data: T) -> Void) {
-        self.success = result
-        if let data = self.data {
-            self.success?(data)
+    func notifySuccess(data: T?) {
+        if let data = data {
+            self.success.forEach { $0(data) }
+            self.success.removeAll()
+            self.failure.removeAll()
         }
     }
     
-    public func bindFailure(_ result: @escaping (_ error: QueryError) -> Void) {
-        self.failure = result
-        if let error = self.error {
-            self.failure?(error)
+    func notifyFailure(error: QueryError?) {
+        if let error = error {
+            self.failure.forEach { $0(error) }
+            self.failure.removeAll()
+            self.success.removeAll()
         }
+    }
+    
+    public func bindSuccess(_ result: @escaping (_ data: T) -> Void) {
+        self.success.append(result)
+        self.notifySuccess(data: self.data)
+    }
+    
+    public func bindFailure(_ result: @escaping (_ error: QueryError) -> Void) {
+        self.failure.append(result)
+        self.notifyFailure(error: self.error)
     }
     
     @discardableResult
