@@ -16,12 +16,12 @@ public protocol Fetchable: Querible {
 }
 
 public extension Fetchable {
-    static func resultHandler(result: QueryResult<Self>, error: Error?, snapshot: Snapshot?, errors: [GraphQLError]?, storage: MapperStorage?) {
+    static func resultHandler(result: QueryResult<Self>, error: Error?, snapshot: Snapshot?, errors: [GraphQLError]?, storage: MapperStorage?, storeOnly: Bool) {
         if let error = error {
             result.setup(error: self.errorDecoder(error))
         } else if let snapshot = snapshot {
             do {
-                result.setup(data: try Self(snapshot: snapshot, storage: storage, storeOnly: result.success == nil))
+                result.setup(data: try Self(snapshot: snapshot, storage: storage, storeOnly: storeOnly))
             } catch let error {
                 result.setup(error: self.errorDecoder(error))
             }
@@ -33,16 +33,16 @@ public extension Fetchable {
     }
     
     @discardableResult
-    public static func fetch(apollo: ApolloClient, storage: MapperStorage? = nil) -> QueryResult<Self> {
+    public static func fetch(apollo: ApolloClient, storage: MapperStorage? = nil, storeOnly: Bool = false) -> QueryResult<Self> {
         return self.fetch(apollo: apollo, query: self.defaultQuery(), storage: storage)
     }
     
     @discardableResult
-    public static func fetch<T: GraphQLQuery>(apollo: ApolloClient, query: T, storage: MapperStorage? = nil) -> QueryResult<Self> {
+    public static func fetch<T: GraphQLQuery>(apollo: ApolloClient, query: T, storage: MapperStorage? = nil, storeOnly: Bool = false) -> QueryResult<Self> {
         let result = QueryResult<Self>()
         let queue = DispatchQueue.global(qos: .background)
         result.cancellable = apollo.fetch(query: query, cachePolicy: CachePolicy.fetchIgnoringCacheData, queue: queue) { (data, error) in
-            self.resultHandler(result: result, error: error, snapshot: data?.data?.snapshot, errors: data?.errors, storage: storage)
+            Self.resultHandler(result: result, error: error, snapshot: data?.data?.snapshot, errors: data?.errors, storage: storage, storeOnly: storeOnly)
         }
         return result
     }

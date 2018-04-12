@@ -66,6 +66,15 @@ class apollo_fetcherTests: XCTestCase {
         }
     }
     
+     func testQueryResult0() {
+        _ = QueryResult<Int>()
+        _ = QueryResult<Int>(data: 11, error: nil)
+        _ = QueryResult<Int>(data: nil, error: nil)
+        _ = QueryResult<Int>(data: nil, error: QueryError.unnown)
+        _ = QueryResult<Int>(data: 11, error: QueryError.unnown)
+
+    }
+    
     func testQueryResult() {
         let result = QueryResult<Int>()
         result.bindSuccess { (value) in
@@ -79,6 +88,8 @@ class apollo_fetcherTests: XCTestCase {
         result.setup(error: QueryError.unnown)
         
         result.cancel()
+        
+
         
         let result2 = QueryResult<Int>(data: 11, error: QueryError.unnown)
         
@@ -164,7 +175,7 @@ class apollo_fetcherTests: XCTestCase {
                 XCTFail()
             }
         }
-        FetchableTestClass.resultHandler(result: result, error: QueryErrorTest.testError3, snapshot: nil, errors: nil, storage: nil)
+        FetchableTestClass.resultHandler(result: result, error: QueryErrorTest.testError3, snapshot: nil, errors: nil, storage: nil, storeOnly: false)
         
         
         let result1 = QueryResult<FetchableTestClass>()
@@ -176,9 +187,9 @@ class apollo_fetcherTests: XCTestCase {
                 XCTFail("testPerformableResultHandler error 2")
             }
         }
-        FetchableTestClass.resultHandler(result: result1, error: nil, snapshot: nil, errors: nil, storage: nil)
+        FetchableTestClass.resultHandler(result: result1, error: nil, snapshot: nil, errors: nil, storage: nil, storeOnly: false)
         
-        FetchableTestClass.resultHandler(result: result1, error: nil, snapshot: nil, errors: [], storage: nil)
+        FetchableTestClass.resultHandler(result: result1, error: nil, snapshot: nil, errors: [], storage: nil, storeOnly: false)
         
         let result2 = QueryResult<FetchableTestClass>()
         result2.bindSuccess { (result) in
@@ -188,7 +199,7 @@ class apollo_fetcherTests: XCTestCase {
             XCTFail("testPerformableResultHandler error 3")
         }
         
-        FetchableTestClass.resultHandler(result: result1, error: nil, snapshot: [:], errors: nil, storage: nil)
+        FetchableTestClass.resultHandler(result: result1, error: nil, snapshot: [:], errors: nil, storage: nil, storeOnly: false)
 
         let result3 = QueryResult<FetchableTestClassBroken>()
         result3.bindSuccess { (result) in
@@ -198,7 +209,7 @@ class apollo_fetcherTests: XCTestCase {
             XCTAssert(true)
         }
         
-        FetchableTestClassBroken.resultHandler(result: result3, error: nil, snapshot: [:], errors: nil, storage: nil)
+        FetchableTestClassBroken.resultHandler(result: result3, error: nil, snapshot: [:], errors: nil, storage: nil, storeOnly: false)
     }
     
     func testPerformablePerform() {

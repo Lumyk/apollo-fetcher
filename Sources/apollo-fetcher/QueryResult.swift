@@ -25,11 +25,10 @@ public class QueryResult<T> {
     }
     
     public init(data: T? = nil, error: QueryError? = nil) {
-        if let data = data, error == nil {
+        if error == nil {
             self.data = data
-        } else if let error = error {
-            self.error = error
         }
+        self.error = error
     }
     
     func setup(data: T) {
