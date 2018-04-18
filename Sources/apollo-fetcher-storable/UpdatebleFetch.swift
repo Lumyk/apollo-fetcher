@@ -12,12 +12,15 @@ import apollo_mapper
 import sqlite_helper
 
 public protocol UpdatebleFetch: StorableFetch {
-    static func updateQuery() -> DefaultQuery
+    static func updateQuery(storage: Storege) -> DefaultQuery
 }
 
 public extension UpdatebleFetch {
+    
     public static func fetchAndSave(context: SavebleContext, storeOnly: Bool = false, update: Bool) -> QueryResult<Self> {
-        let query = update ? Self.updateQuery() : Self.defaultQuery()
-        return self.fetchAndSave(context: context, query: query, storeOnly: storeOnly)
+        let types = Self.storageTypes()
+        let storage = Storege(connection: context.connection, types: types)
+        let query = update ? Self.updateQuery(storage: storage) : Self.defaultQuery()
+        return self.fetch(apollo: context.apollo, query: query, storage: storage, storeOnly: storeOnly)
     }
 }
