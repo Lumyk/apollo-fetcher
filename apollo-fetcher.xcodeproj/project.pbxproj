@@ -21,6 +21,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		155AA0D92087A32900CF0872 /* StorableFetch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 155AA0D72087A32400CF0872 /* StorableFetch.swift */; };
+		155AA0DB2087A3B100CF0872 /* UpdatebleFetch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 155AA0DA2087A3B100CF0872 /* UpdatebleFetch.swift */; };
 		OBJ_108 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_6 /* Package.swift */; };
 		OBJ_114 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_25 /* Package.swift */; };
 		OBJ_120 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_51 /* Package.swift */; };
@@ -226,6 +228,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		155AA0D72087A32400CF0872 /* StorableFetch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorableFetch.swift; sourceTree = "<group>"; };
+		155AA0DA2087A3B100CF0872 /* UpdatebleFetch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatebleFetch.swift; sourceTree = "<group>"; };
 		"Apollo::Apollo::Product" /* Apollo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Apollo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_10 /* Performable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Performable.swift; sourceTree = "<group>"; };
 		OBJ_11 /* Querible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Querible.swift; sourceTree = "<group>"; };
@@ -379,6 +383,8 @@
 			isa = PBXGroup;
 			children = (
 				OBJ_15 /* SavebleContext.swift */,
+				155AA0D72087A32400CF0872 /* StorableFetch.swift */,
+				155AA0DA2087A3B100CF0872 /* UpdatebleFetch.swift */,
 			);
 			name = "apollo-fetcher-storable";
 			path = "Sources/apollo-fetcher-storable";
@@ -493,7 +499,7 @@
 			path = Typed;
 			sourceTree = "<group>";
 		};
-		OBJ_5 /*  */ = {
+		OBJ_5 = {
 			isa = PBXGroup;
 			children = (
 				OBJ_6 /* Package.swift */,
@@ -502,7 +508,6 @@
 				OBJ_20 /* Dependencies */,
 				OBJ_95 /* Products */,
 			);
-			name = "";
 			sourceTree = "<group>";
 		};
 		OBJ_52 /* Apollo 0.8.0 */ = {
@@ -827,7 +832,7 @@
 			knownRegions = (
 				en,
 			);
-			mainGroup = OBJ_5 /*  */;
+			mainGroup = OBJ_5;
 			productRefGroup = OBJ_95 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -903,6 +908,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
+				155AA0D92087A32900CF0872 /* StorableFetch.swift in Sources */,
+				155AA0DB2087A3B100CF0872 /* UpdatebleFetch.swift in Sources */,
 				OBJ_163 /* SavebleContext.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

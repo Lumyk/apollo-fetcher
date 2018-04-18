@@ -36,10 +36,14 @@ class apollo_fetcherTests: XCTestCase {
         }
     }
     
-    class FetchableTestClass: Fetchable, StorableFetch {
-        
+    class FetchableTestClass: UpdatebleFetch {
+
         static func storageTypes() -> [Storable.Type] {
             return [StorableClass.self]
+        }
+
+        static func updateQuery() -> CarsQuery {
+            return CarsQuery(limit: 10)
         }
         
         static func defaultQuery() -> CarsQuery {
@@ -51,7 +55,7 @@ class apollo_fetcherTests: XCTestCase {
         }
     }
     
-    class FetchableTestClassBroken: Fetchable, StorableFetch {
+    class FetchableTestClassBroken: StorableFetch {
         
         static func storageTypes() -> [Storable.Type] {
             return []
@@ -329,7 +333,7 @@ class apollo_fetcherTests: XCTestCase {
             semaphore.signal()
         }
         result.bindSuccess { (_) in
-            XCTFail("testSavebleFatch error 1")
+            XCTFail("testSavebleFatchAndSave error 1")
             semaphore.signal()
         }
         semaphore.wait()
@@ -340,7 +344,26 @@ class apollo_fetcherTests: XCTestCase {
             semaphore.signal()
         }
         result2.bindSuccess { (_) in
-            XCTFail("testSavebleFatch error 2")
+            XCTFail("testSavebleFatchAndSave error 2")
+            semaphore.signal()
+        }
+        semaphore.wait()
+    }
+    
+    func testUpdatebleFatch() {
+        let apollo = ApolloClient(url: URL(string: "http://localhost")!)
+        let connection = try! Connection(Connection.Location.inMemory, readonly: false)
+        let context = TestContext(apollo: apollo, connection: connection)
+        
+        let semaphore = DispatchSemaphore(value: 0)
+        
+        let result = FetchableTestClass.fetchAndSave(context: context, update: true)
+        result.bindFailure { (_) in
+            XCTAssert(true)
+            semaphore.signal()
+        }
+        result.bindSuccess { (_) in
+            XCTFail("testUpdatebleFatch error 1")
             semaphore.signal()
         }
         semaphore.wait()
@@ -354,5 +377,6 @@ class apollo_fetcherTests: XCTestCase {
         ("testPerformablePerform", testPerformablePerform),
         ("testFetchableFetch", testFetchableFetch),
         ("testSavebleFatch", testSavebleFatch),
+        ("testUpdatebleFatch", testUpdatebleFatch),
     ]
 }
