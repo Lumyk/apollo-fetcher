@@ -17,9 +17,9 @@ public protocol UpdatebleFetch: StorableFetch {
 
 public extension UpdatebleFetch {
     
-    public static func fetchAndSave(context: SavebleContext, storeOnly: Bool = false, update: Bool) -> QueryResult<Self> {
+    public static func fetchAndSave(context: SavebleContext, storeOnly: Bool = false, update: Bool, transactionSplitter: MapperStorageTransactionSplitter = .one) -> QueryResult<Self> {
         let types = Self.storageTypes()
-        let storage = Storege(connection: context.connection, types: types)
+        let storage = Storege(connection: context.connection, types: types, splitter: transactionSplitter)
         let query = update ? Self.updateQuery(storage: storage) : Self.defaultQuery()
         return self.fetch(apollo: context.apollo, query: query, storage: storage, storeOnly: storeOnly)
     }

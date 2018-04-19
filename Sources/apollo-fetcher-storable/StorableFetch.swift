@@ -25,15 +25,15 @@ public extension StorableFetch {
         return self.fetch(apollo: context.apollo, query: query, storage: nil)
     }
     
-    public static func fetchAndSave(context: SavebleContext, storeOnly: Bool = false) -> QueryResult<Self> {
+    public static func fetchAndSave(context: SavebleContext, storeOnly: Bool = false, transactionSplitter: MapperStorageTransactionSplitter = .one) -> QueryResult<Self> {
         let types = Self.storageTypes()
-        let storage = Storege(connection: context.connection, types: types)
+        let storage = Storege(connection: context.connection, types: types, splitter: transactionSplitter)
         return self.fetch(apollo: context.apollo, storage: storage, storeOnly: storeOnly)
     }
     
-    public static func fetchAndSave<T: GraphQLQuery>(context: SavebleContext, query: T, storeOnly: Bool = false) -> QueryResult<Self> {
+    public static func fetchAndSave<T: GraphQLQuery>(context: SavebleContext, query: T, storeOnly: Bool = false, transactionSplitter: MapperStorageTransactionSplitter = .one) -> QueryResult<Self> {
         let types = Self.storageTypes()
-        let storage = Storege(connection: context.connection, types: types)
+        let storage = Storege(connection: context.connection, types: types, splitter: transactionSplitter)
         return self.fetch(apollo: context.apollo, query: query, storage: storage, storeOnly: storeOnly)
     }
 }

@@ -37,12 +37,12 @@ class apollo_fetcherTests: XCTestCase {
     }
     
     class FetchableTestClass: UpdatebleFetch {
-
+        
         static func storageTypes() -> [Storable.Type] {
             return [StorableClass.self]
         }
 
-        static func updateQuery() -> CarsQuery {
+        static func updateQuery(storage: Storege) -> CarsQuery {
             return CarsQuery(limit: 10)
         }
         
