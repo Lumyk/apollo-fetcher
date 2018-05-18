@@ -12,7 +12,7 @@ import apollo_mapper
 import sqlite_helper
 
 public protocol StorableFetch: Fetchable {
-    static func storageTypes() -> [Storable.Type]
+    static func storableConfigurations() -> [StorableConfig]
 }
 
 public extension StorableFetch {
@@ -25,15 +25,15 @@ public extension StorableFetch {
         return self.fetch(apollo: context.apollo, query: query, storage: nil)
     }
     
-    public static func fetchAndSave(context: SavebleContext, storeOnly: Bool = false, transactionSplitter: MapperStorageTransactionSplitter = .one) -> QueryResult<Self> {
-        let types = Self.storageTypes()
-        let storage = Storege(connection: context.connection, types: types, splitter: transactionSplitter)
+    public static func fetchAndSave(context: SavebleContext, storeOnly: Bool = false) -> QueryResult<Self> {
+        let configurations = Self.storableConfigurations()
+        let storage = Storege(connection: context.connection, configurations: configurations)
         return self.fetch(apollo: context.apollo, storage: storage, storeOnly: storeOnly)
     }
     
-    public static func fetchAndSave<T: GraphQLQuery>(context: SavebleContext, query: T, storeOnly: Bool = false, transactionSplitter: MapperStorageTransactionSplitter = .one) -> QueryResult<Self> {
-        let types = Self.storageTypes()
-        let storage = Storege(connection: context.connection, types: types, splitter: transactionSplitter)
+    public static func fetchAndSave<T: GraphQLQuery>(context: SavebleContext, query: T, storeOnly: Bool = false) -> QueryResult<Self> {
+        let configurations = Self.storableConfigurations()
+        let storage = Storege(connection: context.connection, configurations: configurations)
         return self.fetch(apollo: context.apollo, query: query, storage: storage, storeOnly: storeOnly)
     }
 }

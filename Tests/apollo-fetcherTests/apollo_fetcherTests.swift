@@ -38,8 +38,8 @@ class apollo_fetcherTests: XCTestCase {
     
     class FetchableTestClass: UpdatebleFetch {
         
-        static func storageTypes() -> [Storable.Type] {
-            return [StorableClass.self]
+        static func storableConfigurations() -> [StorableConfig] {
+            return [StorableClass.config]
         }
 
         static func updateQuery(storage: Storege) -> CarsQuery {
@@ -57,7 +57,7 @@ class apollo_fetcherTests: XCTestCase {
     
     class FetchableTestClassBroken: StorableFetch {
         
-        static func storageTypes() -> [Storable.Type] {
+        static func storableConfigurations() -> [StorableConfig] {
             return []
         }
         
